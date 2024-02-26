@@ -4,8 +4,13 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.ExcludeClassInterceptors;
+import jakarta.interceptor.Interceptors;
 import jakarta.interceptor.InvocationContext;
 
+
+@Interceptors(EmployeeInterceptor.class)
+@RequestScoped
 public class Employee {
     private String name;
 
@@ -21,29 +26,16 @@ public class Employee {
     public void setName(String name) {
         this.name = name;
     }
-    @PostConstruct
-    // required access modifier - private
-    private void postConstruct(){
-        System.out.println("Invoke post construct method");
-    }
 
-    @AroundInvoke
-    // required access modifier - private
-    private Object before(InvocationContext invocationContext) throws Exception {
-        System.out.println("Around invoke method: " + invocationContext.getMethod().getName());
-        return invocationContext.proceed();
-    }
-
+//    @Interceptors(EmployeeInterceptor.class)
     public void doJob(){
         System.out.println("do job...");
     }
+    @ExcludeClassInterceptors
+    // interceptors don't work before this method
     public void doJob2(){
         System.out.println("do job2...");
 
     }
-    @PreDestroy
-    // required access modifier - private
-    private void preDestroy(){
-        System.out.println("Invoke pre destroy method");
-    }
+
 }
